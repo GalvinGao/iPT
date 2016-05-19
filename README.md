@@ -1,4 +1,4 @@
-![iPT Logo](http://i2.buimg.com/04c25b3022c39f68.jpg)
+![iPT Logo](http://i4.buimg.com/c711795afeb22790.jpg)
 
 # iPT
 ## Introduction
