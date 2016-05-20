@@ -2,9 +2,9 @@
 
     iPad Performance Tester
 
-        Version: v0.1.6-beta.2
-        Author: GalvinGao
-        Update Time: 2016.5.19 15:07
+        Version: v0.1.7
+        Author: Galvin Gao
+        Update Time: 2016.5.20 14:57
         GitHub: http://github.com/GalvinGao/iPT
 
 
@@ -16,9 +16,11 @@
 
 ]]--
 
-supportedOrientations( LANDSCAPE_RIGHT )
+supportedOrientations( LANDSCAPE_RIGHT )  
 
 function setup()
+    saveProjectInfo( "Description", "This program is designed for testing iPad performance. The principle is the iPad will find the power of pi for 50,000,000 times and measure the time it takes." )
+    saveProjectInfo( "Author", "Galvin Gao" )
     testHaveBeenTested = 0
     Enter_Specilified_Time_for_Searching = 0
     parm()
@@ -31,28 +33,12 @@ function draw()
     fontSize(20)
     textWrapWidth(500)
     text("This test will make your iPad to find the power of π for 50000000 times.\n\nPlease mind, the test may take a while to run, please be patient.\n\n\nAverage:\n8.657363s", WIDTH/2, HEIGHT/2)
-    drawClock()
+    
 end 
-
-function drawClock()
-    if status == "0" then
-            currClock = os.clock()
-            fontSize(10)
-            font("CourierNewPS-BoldMT")
-            text("Current 'os.clock': "..currClock, WIDTH*0.75, HEIGHT*0.75)
-        elseif status == "1" then
-            fontSize(10)
-            font("CourierNewPS-BoldMT")
-            text("Test is running, clock unavailable", WIDTH*0.75, HEIGHT*0.75)
-        else
-            print( "Illegal status code." )
-    end
-end
 
 ----- [Start] Menu area -----
 
 function parm()
-    status = "0"
     parameter.clear()
     parameter.watch( "testHaveBeenTested" )
     parameter.action( "Test once...", test )
@@ -88,7 +74,6 @@ end
 ----- [Start] Test front -----
 
 function testRunningButton()
-    status = "1"
     parameter.action( "Test is running" )
     parameter.action( "Test is running." )
     parameter.action( "Test is running.." )
@@ -107,7 +92,6 @@ function test()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    drawClock()
     passtime = os.clock()
     for i = 1, 50000000 do
         pi = math.pi
@@ -128,7 +112,7 @@ function test10times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    drawClock()
+    ()
     for i = 1, 10 do
         passtime = os.clock()
             for i = 1, 50000000 do
@@ -151,7 +135,7 @@ function test25times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    drawClock()
+    ()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
@@ -177,7 +161,7 @@ function test100times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    drawClock()
+    ()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
