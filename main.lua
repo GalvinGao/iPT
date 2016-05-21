@@ -4,7 +4,7 @@
 
         Version: v0.1.7
         Author: Galvin Gao
-        Update Time: 2016.5.20 14:57
+        Update Time: 2016.5.21 13:15
         GitHub: http://github.com/GalvinGao/iPT
 
 
@@ -112,7 +112,6 @@ function test10times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    ()
     for i = 1, 10 do
         passtime = os.clock()
             for i = 1, 50000000 do
@@ -135,7 +134,6 @@ function test25times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    ()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
@@ -161,7 +159,6 @@ function test100times()
     parameter.clear()
     parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
-    ()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
