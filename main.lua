@@ -2,9 +2,9 @@
 
     iPad Performance Tester
 
-        Version: v0.1.7
+        Version: v0.2.0
         Author: Galvin Gao
-        Update Time: 2016.5.21 13:15
+        Update Time: 2016.6.1 10:24
         GitHub: http://github.com/GalvinGao/iPT
 
 
@@ -23,23 +23,38 @@ function setup()
     saveProjectInfo( "Author", "Galvin Gao" )
     testHaveBeenTested = 0
     Enter_Specilified_Time_for_Searching = 0
+    fP = 0
+    LT = 0
     parm()
 end
 
 function draw()
+    fP = fP + 1
+    t = ElapsedTime - LT
+    fps = fP / t
+    if fP > 120 then
+        fP = 0
+        t = t - LT
+        fps = fP / t
+        LT = ElapsedTime
+        else
+    end
     background(100, 120, 160, 150)
     font("Futura-MediumItalic")
     fill(255)
     fontSize(20)
     textWrapWidth(500)
     text("This test will make your iPad to find the power of π for 50000000 times.\n\nPlease mind, the test may take a while to run, please be patient.\n\n\nAverage:\n8.657363s", WIDTH/2, HEIGHT/2)
-    
+    fontSize(11)
+    font("CourierNewPS-BoldMT")
+    text("FPS: "..fps, WIDTH/2+WIDTH/4, HEIGHT/2+WIDTH/4)
 end 
 
 ----- [Start] Menu area -----
 
 function parm()
     parameter.clear()
+    parameter.watch( "fps" )
     parameter.watch( "testHaveBeenTested" )
     parameter.action( "Test once...", test )
     parameter.action( "...  More Test Options  ...", more_test_menu_parm )
@@ -74,6 +89,8 @@ end
 ----- [Start] Test front -----
 
 function testRunningButton()
+    parameter.clear()
+    parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     parameter.action( "Test is running" )
     parameter.action( "Test is running." )
     parameter.action( "Test is running.." )
@@ -89,8 +106,6 @@ end
 -- Test 001x
 
 function test()
-    parameter.clear()
-    parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
     passtime = os.clock()
     for i = 1, 50000000 do
@@ -109,8 +124,6 @@ end
 -- Test 010x
 
 function test10times()
-    parameter.clear()
-    parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
     for i = 1, 10 do
         passtime = os.clock()
@@ -120,7 +133,7 @@ function test10times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done. Result: "..passedtime.."s" )
+        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
         testHaveBeenTested = testHaveBeenTested + 1
         saveWithIndex()
         saveLastTime()
@@ -131,8 +144,6 @@ end
 -- Test 025x
 
 function test25times()
-    parameter.clear()
-    parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
@@ -145,7 +156,7 @@ function test25times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done. Result: "..passedtime.."s" )
+        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
         testHaveBeenTested = testHaveBeenTested + 1
         saveWithIndex()
         saveLastTime()
@@ -156,8 +167,6 @@ end
 -- Test 100x
 
 function test100times()
-    parameter.clear()
-    parameter.watch( "testHaveBeenTested_TestIsRunning..." )
     testRunningButton()
     print( "This test will take really a long while. Please be patient." )
     print( "This test will take really a long while. Please be patient." )
@@ -170,7 +179,7 @@ function test100times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done. Result: "..passedtime.."s" )
+        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
         testHaveBeenTested = testHaveBeenTested + 1
         saveWithIndex()
         saveLastTime()
