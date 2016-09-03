@@ -1,7 +1,5 @@
 [![iPT Logo](http://i4.buimg.com/c711795afeb22790.jpg)](#)
 
-[![Coverage Status](https://coveralls.io/repos/github/GalvinGao/iPT/badge.svg?branch=master)](https://coveralls.io/github/GalvinGao/iPT?branch=master)
-
 # iPT
 ## Introduction
 This program is designed for testing iPad performance.
