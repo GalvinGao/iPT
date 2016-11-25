@@ -1,8 +1,0 @@
-before_install:
-  - sudo luarocks install luacov-coveralls
-
-script:
-  - lua -lluacov test.lua
-
-after_success:
-  - luacov-coveralls
