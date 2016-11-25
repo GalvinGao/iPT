@@ -1,9 +1,9 @@
 --[[
 
-    iPad Performance Tester
+    iPad Performance Tester - Main
 
         Author: Galvin Gao
-        GitHub: http://github.com/GalvinGao/iPT
+        GitHub: https://github.com/GalvinGao/iPT
 
 
     This program is designed for testing iPad performance.
@@ -14,8 +14,15 @@
 
 ]]--
 
-supportedOrientations( LANDSCAPE_ANY )  
+supportedOrientations( LANDSCAPE_ANY )
+displayMode( FULLSCREEN_NO_BUTTONS )
 
+-- To test a script
+function TestFunction()
+    -- Input the script that needs to test
+end
+
+-- Run once when start program
 function setup()
     -- Save Project Info
     saveProjectInfo( "Description", "This program is designed for testing iPad performance. The principle is the iPad will find the power of pi for 50,000,000 times and measure the time it takes." )
@@ -26,6 +33,11 @@ function setup()
     
     -- Menu Setup - Parameter
     parm()
+    
+    -- Print out MOTD
+    motd()
+    
+    firstRun()
 end
 
 function setupVar()
@@ -38,23 +50,57 @@ function setupVar()
     -- Setup FPS Calculate materials - FramesPassed
     fP = 0
     
-    -- Setup FPS Calculate materials - LastTime(ElapsedTimeNeedToMinus)
+    -- Setup FPS Calculate materials - LastTime (ElapsedTimeNeedToMinus)
     LT = 0
     
     -- Setup Global Test Counter
     GlobalTestCounter = 0
     
-    -- Setup Test Counter Var1
+    -- Setup Test Counter Vars
     SaveTimeGC = 0
-    
-    -- Setup Test Counter Var2
     LastTimeGC = 0
     
-    -- Setup Test Counter Var3
     SaveTimeGT = 0
-    
-    -- Setup Test Counter Var4
     LastTimeGT = 0
+    
+    SaveTimeTA = 0
+    LastTimeTA = 0
+    
+    SaveTimeTT = 0
+    LastTimeTT = 0
+    
+    -- Setup current displayMode
+    DisplayMode = "FULLSCREEN_NO_BUTTONS"
+    
+    NormalTestAvg = 0
+    
+    -- A function that uses to test a script
+    TestFunction()
+end
+
+function firstRun()
+    isFirstRun = 0
+    firstRunRead = readLocalData( "firstRun" )
+    if firstRunRead == nil then
+        isFirstRun = 1
+        else
+        isFirstRun = 0
+    end
+    if isFirstRun == 1 then
+        print( "Project storage didn't detected, restoring storage structure..." )
+        saveLocalData( "GlobalCounter", 0 )
+        saveLocalData( "GlobalTime", 0 )
+        saveLocalData( "TestAll", 0 )
+        saveLocalData( "TestTimes", 0 )
+        saveLocalData( "lastTimeResult", 0 )
+        for i = 1, 100 do
+            saveLocalData( "result_"..i, 0 )
+            saveLocalData( "devide_"..i, 0 )
+        end
+        saveLocalData( "firstRun", 0 )
+        else
+        print( "Not first run, do not need to restore structure." )
+    end
 end
 
 function draw()
@@ -71,20 +117,53 @@ function draw()
     end
     
     -- Setup Background & font properties
-    background( 100, 120, 160, 150 )
-    font( "Futura-MediumItalic" )
     fill( 255 )
-    fontSize( 20 )
     textWrapWidth( 500 )
+    sprite("Documents:bkgd", WIDTH/2, HEIGHT/2 )
     
-    -- Shows the discription
-    text( "This test will make your iPad to find the power of π for 50000000 times.\n\nPlease mind, the test may take a while to run, please be patient.\n\n\nAverage:\n8.657363s", WIDTH/2, HEIGHT/2 )
+    -- Refresh Avg Value
+    ReadNormalTestAvg()
+    
+    -- Text Editing
+    Description = "This test will make your iPad to find the power of π for 50000000 times.\n\nPlease notice, the test may take a while to run, please be patient.\n\n\nAverage:\n" .. NormalTestAvg .. "s"
+    Tips = "[ Click once to show/hide menu ]"
+    
+    -- Shows the description
+    fontSize( 20 )
+    font( "Futura-MediumItalic" )
+    text( Description, WIDTH/2, HEIGHT/2-HEIGHT/12 )
+    
+    fontSize( 24 )
+    font("Futura-Medium")
+    text( Tips, WIDTH/2, HEIGHT/2+HEIGHT/4+HEIGHT/12 )
     
     -- Shows the FPS
     fontSize( 11 )
     font( "CourierNewPS-BoldMT" )
-    text( "FPS: "..fps, WIDTH/2+WIDTH/4, HEIGHT/2+WIDTH/4 )
-end 
+    text( "FPS: "..fps, WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/8 )
+end
+
+-- Display Mode Switcher
+
+function touched(touch)
+    if DisplayMode == "FULLSCREEN_NO_BUTTONS" and touch.tapCount == 1 and touch.state == ENDED then
+        displayMode( OVERLAY )
+        DisplayMode = "OVERLAY"
+    elseif DisplayMode == "OVERLAY" and touch.tapCount == 1 and touch.state == ENDED then
+        displayMode( FULLSCREEN_NO_BUTTONS )
+        DisplayMode = "FULLSCREEN_NO_BUTTONS"
+    end
+end
+
+-- Print out MOTD
+function motd()
+    motd = readText( "Documents:motd" )
+    if motd == nil then
+        print( "MOTD file can not being found..." )
+        else
+        print( motd )
+    end
+end
 
 ----- [Start] Menu area -----
 
@@ -127,9 +206,11 @@ end
 function test_counter_parm()
     ReadGlobalCounter()
     ReadGlobalTime()
+    ReadNormalTestAvg()
     parameter.clear()
     parameter.action( "== Back ==", parm )
     parameter.watch( "SectionTestCounter" )
+    parameter.watch( "NormalTestAvg" )
     parameter.watch( "GlobalTestCounter" )
     parameter.watch( "GlobalTimeUsed" )
 end
@@ -153,7 +234,8 @@ end
 -- Test Counter Menu - Global Time Used Reader
 
 function ReadGlobalTime()
-    GlobalTimeUsed = readLocalData( "GlobalTime" )
+    GlobalTimeData = readLocalData( "GlobalTime" )
+    GlobalTimeUsed = GlobalTimeData .. "s"
 end
 
 -- Test Counter Menu - Global Time Used Saver
@@ -164,6 +246,32 @@ function SaveGlobalTime()
     saveLocalData( "GlobalTime", SaveTimeGT )
     LastTimeGT = 0
     SaveTimeGT = 0
+end
+
+-- Test Counter Menu - Normal Test Avg Reader
+
+function ReadNormalTestAvg()
+    TestAll = readLocalData( "TestAll" )
+    TestTimes = readLocalData( "TestTimes" )
+    NormalTestAvg = TestAll / TestTimes
+end
+
+-- Test Counter Menu - Normal Test Avg Saver
+
+function SaveNormalTestAvg()
+    -- Test Time Used
+    LastTimeTA = readLocalData( "TestAll" )
+    SaveTimeTA = LastTimeTA + passedtime
+    saveLocalData( "TestAll", SaveTimeTA )
+    LastTimeTA = 0
+    SaveTimeTA = 0
+    
+    -- Test Times
+    LastTimeTT = readLocalData( "TestTimes" )
+    SaveTimeTT = LastTimeTT + 1
+    saveLocalData( "TestTimes", SaveTimeTT )
+    LastTimeTT = 0
+    SaveTimeTT = 0
 end
 
 -- Clear Output
@@ -209,10 +317,11 @@ function test()
     end
     nowtime = os.clock()
     passedtime = nowtime - passtime
-    print( passedtime .. " s" )
+    print( "Result: " .. passedtime .. " s" )
     SectionTestCounter = SectionTestCounter + 1
     saveWithIndex()
     saveLastTime()
+    SaveNormalTestAvg()
     parm()
 end
 
@@ -228,10 +337,11 @@ function test10times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
+        print( i.."th test is done.\nResult: "..passedtime.."s" )
         SectionTestCounter = SectionTestCounter + 1
         saveWithIndex()
         saveLastTime()
+        SaveNormalTestAvg()
     end
     parm()
 end
@@ -251,10 +361,11 @@ function test25times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
+        print( i.."th test is done.\nResult: "..passedtime.."s" )
         SectionTestCounter = SectionTestCounter + 1
         saveWithIndex()
         saveLastTime()
+        SaveNormalTestAvg()
     end
     parm()
 end
@@ -274,10 +385,11 @@ function test100times()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
+        print( i.."th test is done.\nResult: "..passedtime.."s" )
         SectionTestCounter = SectionTestCounter + 1
         saveWithIndex()
         saveLastTime()
+        SaveNormalTestAvg() 
     end
     parm()
 end
@@ -324,10 +436,14 @@ function customtest()
             end
         nowtime = os.clock()
         passedtime = nowtime - passtime
-        print( i.."th test is done.\nResult: "..passedtime.."s\nFPS: "..fps )
+        print( i.."th test is done.\nResult: "..passedtime.."s" )
         SectionTestCounter = SectionTestCounter + 1
         saveWithIndex()
         saveLastTime()
+        if testHowManyTimesDividePi == 50000000 then
+            ReadNormalTestAvg()
+        else
+        end
     end
     parm()
 end
@@ -363,9 +479,17 @@ end
 
 function clearAllResultConfirmed()
     clearLocalData()
+    resetLocalDataStructure()
     parameter.clear()
     parameter.action( "History Deleted." )
     parameter.action( "= Back to Main Menu =", parm )
+end
+
+function resetLocalDataStructure()
+    saveLocalData( "GlobalCounter", 0 )
+    saveLocalData( "GlobalTime", 0 )
+    saveLocalData( "TestAll", 0 )
+    saveLocalData( "TestTimes", 0 )
 end
 
 ----- [End] Data edit -----
