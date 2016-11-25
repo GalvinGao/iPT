@@ -1,0 +1,40 @@
+--[[
+
+    iPad Performance Tester - CHANGELOG
+        Author: Galvin Gao
+        GitHub: https://github.com/GalvinGao/iPT
+
+    This program is designed for testing iPad performance.
+
+
+    v0.2.1-alpha
+        2016.7.31 21:53 GMT+8
+            + Added History cleaner
+            * Improve menu UI
+            + Added FPS Lock [Still in construction...]
+            + Added test running state
+            * Improve history search
+            * Improve test x times, added value checker
+            + Added custom test
+
+    v0.2.2-alpha
+        2016.8.4 11:32 GMT+8
+            - Removed Test Counter (old)
+            + Added Section Test Counter
+            + Added Global Test Counter
+            * Improve running button
+            + Added Global Time Used Counter
+
+    v0.2.3-alpha
+        2016.8.6 14:34 GMT+8
+            + Added Normal Test Avg
+            * Improve Screen Saver (Normal Test Avg Involved)
+            * Improve Setup Variable Function
+            + Added Function Test
+
+    v0.2.4-alpha
+        2016.8.7 22:29 GMT+8
+            * Improve background
+            * Improve Display Mode
+
+]]--
